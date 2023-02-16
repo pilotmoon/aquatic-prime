@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sign = void 0;
+exports.sign = exports.Signer = void 0;
 const node_crypto_1 = require("node:crypto");
 const powmod = (x, a, m) => {
   let r = 1n;
@@ -13,8 +13,17 @@ const powmod = (x, a, m) => {
   }
   return r;
 };
+class Signer {
+  constructor(keys) {
+    this.keys = keys;
+  }
+  sign(licenseDetails) {
+    return sign(licenseDetails, this.keys);
+  }
+}
+exports.Signer = Signer;
 // Sign a license with a raw private key and public key, returning signature
-function sign(licenseDetails, privateKey, publicKey) {
+function sign(licenseDetails, keys) {
   // Concatenate the values in sorted key order
   const sortedKeys = Object.keys(licenseDetails).sort();
   const concatenation = sortedKeys.map((key) => licenseDetails[key]).join("");
@@ -23,6 +32,6 @@ function sign(licenseDetails, privateKey, publicKey) {
   hash.update(concatenation, "utf8");
   // Pad the hash with magic bytes then sign it
   const paddedHash = "0001" + "ff".repeat(105) + "00" + hash.digest("hex");
-  return powmod(BigInt("0x" + paddedHash), privateKey, publicKey);
+  return powmod(BigInt("0x" + paddedHash), keys.privateKey, keys.publicKey);
 }
 exports.sign = sign;
