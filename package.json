@@ -1,6 +1,6 @@
 {
-  "name": "marine",
-  "version": "0.0.0",
+  "name": "@pilotmoon/marine",
+  "version": "0.1.0",
   "description": "Generate AquaticPrime license keys",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/pilotmoon/marine.git"
   },
-  "author": "",
+  "author": "Nick Moore",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/pilotmoon/marine/issues"
