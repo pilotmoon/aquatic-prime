@@ -1,13 +1,13 @@
-# aquatic-prime (node)
+# AquaticPrime for node
 
 A node.js module to generate AquaticPrime-compatible license keys.
 
 ```shell-script
-npm install @pilotmoon/marine
+npm install @pilotmoon/aquatic-prime
 ```
 
-```javascript
-import { AquaticPrime } from "@pilotmoon/marine";
+```typescript
+import { AquaticPrime } from "@pilotmoon/aquatic-prime";
 
 const aqp = new AquaticPrime({
   publicKey: "<base64 encoded public key>",
