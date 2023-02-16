@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ava_1 = require("ava");
-const aquaticPrime_1 = require("../src/aquaticPrime");
+const index_1 = require("../index");
 const bigint_conversion_1 = require("bigint-conversion");
 // example keys
 const examplePublicKey =
@@ -18,20 +18,37 @@ const examplePayload = {
 };
 const exampleExpect =
   "vU67LJsEd8yDuxL+9Y9xfJYCl4IFLoO4pijK8n7J+UY7cxIhv3y9G3UdZ4nl9Xi7hfk2cbtv53xxQBRclZKoEZRrQPo+jz9WJIzzFaBzvX9PobSvtdyShXqTUOloEextvDwGB9KjU+OUv5jqyPc/auiZY9fcsgvFgJWEZXBfT+8=";
+const examplePlist = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>name</key>
+    <string>fooinator</string>
+    <key>date</key>
+    <string>2020-01-01</string>
+    <key>version</key>
+    <string>1.0.0</string>
+    <key>description</key>
+    <string>foo</string>
+    <key>Signature</key>
+    <data>vU67LJsEd8yDuxL+9Y9xfJYCl4IFLoO4pijK8n7J+UY7cxIhv3y9G3UdZ4nl9Xi7hfk2cbtv53xxQBRclZKoEZRrQPo+jz9WJIzzFaBzvX9PobSvtdyShXqTUOloEextvDwGB9KjU+OUv5jqyPc/auiZY9fcsgvFgJWEZXBfT+8=</data>
+  </dict>
+</plist>`;
+const aqp = new index_1.AquaticPrime({
+  publicKey: examplePublicKey,
+  privateKey: examplePrivateKey,
+  keyFormat: "base64",
+});
 const exampleKeyPair = {
   publicKey: (0, bigint_conversion_1.base64ToBigint)(examplePublicKey),
   privateKey: (0, bigint_conversion_1.base64ToBigint)(examplePrivateKey),
 };
 (0, ava_1.default)("sign", (t) => {
   t.is(
-    (0, aquaticPrime_1.sign)(examplePayload, exampleKeyPair),
+    (0, index_1.sign)(examplePayload, exampleKeyPair),
     (0, bigint_conversion_1.base64ToBigint)(exampleExpect),
   );
 });
-(0, ava_1.default)("signer", (t) => {
-  const signer = new aquaticPrime_1.Signer(exampleKeyPair);
-  t.is(
-    signer.sign(examplePayload),
-    (0, bigint_conversion_1.base64ToBigint)(exampleExpect),
-  );
+(0, ava_1.default)("generateLicense", (t) => {
+  t.is(aqp.generateLicense(examplePayload), examplePlist);
 });

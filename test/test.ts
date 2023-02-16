@@ -1,5 +1,5 @@
 import test from "ava";
-import { sign, Signer } from "../src/aquaticPrime";
+import { AquaticPrime, sign } from "../index";
 import { base64ToBigint } from "bigint-conversion";
 
 // example keys
@@ -17,22 +17,36 @@ const examplePayload = {
 };
 const exampleExpect =
   "vU67LJsEd8yDuxL+9Y9xfJYCl4IFLoO4pijK8n7J+UY7cxIhv3y9G3UdZ4nl9Xi7hfk2cbtv53xxQBRclZKoEZRrQPo+jz9WJIzzFaBzvX9PobSvtdyShXqTUOloEextvDwGB9KjU+OUv5jqyPc/auiZY9fcsgvFgJWEZXBfT+8=";
+const examplePlist = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>name</key>
+    <string>fooinator</string>
+    <key>date</key>
+    <string>2020-01-01</string>
+    <key>version</key>
+    <string>1.0.0</string>
+    <key>description</key>
+    <string>foo</string>
+    <key>Signature</key>
+    <data>vU67LJsEd8yDuxL+9Y9xfJYCl4IFLoO4pijK8n7J+UY7cxIhv3y9G3UdZ4nl9Xi7hfk2cbtv53xxQBRclZKoEZRrQPo+jz9WJIzzFaBzvX9PobSvtdyShXqTUOloEextvDwGB9KjU+OUv5jqyPc/auiZY9fcsgvFgJWEZXBfT+8=</data>
+  </dict>
+</plist>`;
+const aqp = new AquaticPrime({
+  publicKey: examplePublicKey,
+  privateKey: examplePrivateKey,
+  keyFormat: "base64",
+});
 const exampleKeyPair = {
   publicKey: base64ToBigint(examplePublicKey),
   privateKey: base64ToBigint(examplePrivateKey),
 };
 
 test("sign", (t) => {
-  t.is(
-    sign(
-      examplePayload,
-      exampleKeyPair,
-    ),
-    base64ToBigint(exampleExpect),
-  );
+  t.is(sign(examplePayload, exampleKeyPair), base64ToBigint(exampleExpect));
 });
 
-test("signer", (t) => {
-  const signer = new Signer(exampleKeyPair);
-  t.is(signer.sign(examplePayload), base64ToBigint(exampleExpect));
+test("generateLicense", (t) => {
+  t.is(aqp.generateLicense(examplePayload), examplePlist);
 });

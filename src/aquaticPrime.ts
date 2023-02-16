@@ -1,9 +1,47 @@
+import { base64ToBigint, bigintToBuf, hexToBigint } from "bigint-conversion";
 import { createHash } from "node:crypto";
+const plist = require("plist");
 // Based on the original `aquatic_prime.coffee` from https://github.com/bdrister/AquaticPrime
 
 export type LicenseDetails = Record<string, string>;
 export type KeyPair = { publicKey: bigint; privateKey: bigint };
 
+export class AquaticPrime {
+  private keys: KeyPair;
+
+  // Create a new AquaticPrime instance with a public and private key
+  constructor(
+    { publicKey, privateKey, keyFormat }: {
+      publicKey: string;
+      privateKey: string;
+      keyFormat: "hex" | "base64";
+    },
+  ) {
+    if (keyFormat === "hex") {
+      this.keys = {
+        publicKey: hexToBigint(publicKey),
+        privateKey: hexToBigint(privateKey),
+      };
+    } else if (keyFormat === "base64") {
+      this.keys = {
+        publicKey: base64ToBigint(publicKey),
+        privateKey: base64ToBigint(privateKey),
+      };
+    } else {
+      throw new Error(`Unknown key format: ${keyFormat}`);
+    }
+  }
+
+  // Generate a license plist from a license details object
+  generateLicense(licenseDetails: LicenseDetails) {
+    return plist.build({
+      ...licenseDetails,
+      Signature: bigintToBuf(sign(licenseDetails, this.keys)),
+    });
+  }
+}
+
+// Modular exponentiation
 const powmod = (x: bigint, a: bigint, m: bigint): bigint => {
   let r = 1n;
   while (a > 0n) {
@@ -15,18 +53,6 @@ const powmod = (x: bigint, a: bigint, m: bigint): bigint => {
   }
   return r;
 };
-
-export class Signer {
-  private keys: KeyPair;
-
-  constructor(keys: KeyPair) {
-    this.keys = keys;
-  }
-
-  sign(licenseDetails: LicenseDetails) {
-    return sign(licenseDetails, this.keys);
-  }
-}
 
 // Sign a license with a raw private key and public key, returning signature
 export function sign(

@@ -1,7 +1,38 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sign = exports.Signer = void 0;
+exports.sign = exports.AquaticPrime = void 0;
+const bigint_conversion_1 = require("bigint-conversion");
 const node_crypto_1 = require("node:crypto");
+const plist = require("plist");
+class AquaticPrime {
+  // Create a new AquaticPrime instance with a public and private key
+  constructor({ publicKey, privateKey, keyFormat }) {
+    if (keyFormat === "hex") {
+      this.keys = {
+        publicKey: (0, bigint_conversion_1.hexToBigint)(publicKey),
+        privateKey: (0, bigint_conversion_1.hexToBigint)(privateKey),
+      };
+    } else if (keyFormat === "base64") {
+      this.keys = {
+        publicKey: (0, bigint_conversion_1.base64ToBigint)(publicKey),
+        privateKey: (0, bigint_conversion_1.base64ToBigint)(privateKey),
+      };
+    } else {
+      throw new Error(`Unknown key format: ${keyFormat}`);
+    }
+  }
+  // Generate a license plist from a license details object
+  generateLicense(licenseDetails) {
+    return plist.build({
+      ...licenseDetails,
+      Signature: (0, bigint_conversion_1.bigintToBuf)(
+        sign(licenseDetails, this.keys),
+      ),
+    });
+  }
+}
+exports.AquaticPrime = AquaticPrime;
+// Modular exponentiation
 const powmod = (x, a, m) => {
   let r = 1n;
   while (a > 0n) {
@@ -13,15 +44,6 @@ const powmod = (x, a, m) => {
   }
   return r;
 };
-class Signer {
-  constructor(keys) {
-    this.keys = keys;
-  }
-  sign(licenseDetails) {
-    return sign(licenseDetails, this.keys);
-  }
-}
-exports.Signer = Signer;
 // Sign a license with a raw private key and public key, returning signature
 function sign(licenseDetails, keys) {
   // Concatenate the values in sorted key order

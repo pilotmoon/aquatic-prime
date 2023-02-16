@@ -25,6 +25,7 @@
   "dependencies": {
     "ava": "5.2.0",
     "bigint-conversion": "2.3.0",
+    "plist": "3.0.6",
     "tsc-watch": "6.0.0"
   }
 }
