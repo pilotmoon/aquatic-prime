@@ -19,11 +19,12 @@
   },
   "homepage": "https://github.com/pilotmoon/marine#readme",
   "devDependencies": {
-    "cowsay": "1.5.0",
+    "@types/node": "18.13.0",
     "typescript": "4.9.5"
   },
   "dependencies": {
     "ava": "5.2.0",
+    "bigint-conversion": "2.3.0",
     "tsc-watch": "6.0.0"
   }
 }
