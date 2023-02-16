@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sign = void 0;
-const bigint_conversion_1 = require("bigint-conversion");
 const node_crypto_1 = require("node:crypto");
 const powmod = (x, a, m) => {
   let r = 1n;
@@ -14,7 +13,7 @@ const powmod = (x, a, m) => {
   }
   return r;
 };
-// Sign a license with a private key and public key, returning a base64-encoded signature
+// Sign a license with a raw private key and public key, returning signature
 function sign(licenseDetails, privateKey, publicKey) {
   // Concatenate the values in sorted key order
   const sortedKeys = Object.keys(licenseDetails).sort();
@@ -22,13 +21,8 @@ function sign(licenseDetails, privateKey, publicKey) {
   // SHA1 hash the concatenation
   const hash = (0, node_crypto_1.createHash)("sha1");
   hash.update(concatenation, "utf8");
-  // Pad the hash with magic bytes then RSA sign it
+  // Pad the hash with magic bytes then sign it
   const paddedHash = "0001" + "ff".repeat(105) + "00" + hash.digest("hex");
-  const sig = powmod(
-    BigInt("0x" + paddedHash),
-    BigInt("0x" + privateKey),
-    BigInt("0x" + publicKey),
-  );
-  return (0, bigint_conversion_1.bigintToBase64)(sig);
+  return powmod(BigInt("0x" + paddedHash), privateKey, publicKey);
 }
 exports.sign = sign;

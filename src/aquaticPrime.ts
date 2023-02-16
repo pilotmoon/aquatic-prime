@@ -1,4 +1,3 @@
-import { bigintToBase64 } from "bigint-conversion";
 import { createHash } from "node:crypto";
 // Based on the original `aquatic_prime.coffee` from https://github.com/bdrister/AquaticPrime
 
@@ -16,11 +15,11 @@ const powmod = (x: bigint, a: bigint, m: bigint): bigint => {
   return r;
 };
 
-// Sign a license with a private key and public key, returning a base64-encoded signature
+// Sign a license with a raw private key and public key, returning signature
 export function sign(
   licenseDetails: LicenseDetails,
-  privateKey: string,
-  publicKey: string,
+  privateKey: bigint,
+  publicKey: bigint,
 ) {
   // Concatenate the values in sorted key order
   const sortedKeys = Object.keys(licenseDetails).sort();
@@ -30,12 +29,11 @@ export function sign(
   const hash = createHash("sha1");
   hash.update(concatenation, "utf8");
 
-  // Pad the hash with magic bytes then RSA sign it
+  // Pad the hash with magic bytes then sign it
   const paddedHash = "0001" + "ff".repeat(105) + "00" + hash.digest("hex");
-  const sig = powmod(
+  return powmod(
     BigInt("0x" + paddedHash),
-    BigInt("0x" + privateKey),
-    BigInt("0x" + publicKey),
+    privateKey,
+    publicKey,
   );
-  return bigintToBase64(sig);
 }
