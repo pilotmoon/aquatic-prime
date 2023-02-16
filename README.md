@@ -1,4 +1,4 @@
-# Marine
+# aquatic-prime (node)
 
 A node.js module to generate AquaticPrime-compatible license keys.
 

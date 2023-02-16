@@ -1,6 +1,6 @@
 {
-  "name": "@pilotmoon/marine",
-  "version": "0.1.0",
+  "name": "@pilotmoon/aquatic-prime",
+  "version": "0.0.0",
   "description": "Generate AquaticPrime license keys",
   "main": "index.js",
   "scripts": {
@@ -10,22 +10,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pilotmoon/marine.git"
+    "url": "git+https://github.com/pilotmoon/aquatic-prime.git"
   },
   "author": "Nick Moore",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/pilotmoon/marine/issues"
+    "url": "https://github.com/pilotmoon/aquatic-prime/issues"
   },
-  "homepage": "https://github.com/pilotmoon/marine#readme",
+  "homepage": "https://github.com/pilotmoon/aquatic-prime#readme",
   "devDependencies": {
     "@types/node": "18.13.0",
+    "ava": "5.2.0",
+    "tsc-watch": "6.0.0",
     "typescript": "4.9.5"
   },
   "dependencies": {
-    "ava": "5.2.0",
     "bigint-conversion": "2.3.0",
-    "plist": "3.0.6",
-    "tsc-watch": "6.0.0"
+    "plist": "3.0.6"
   }
 }
