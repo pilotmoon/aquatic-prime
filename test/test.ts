@@ -1,6 +1,6 @@
 import test from "ava";
-import { AquaticPrime, sign } from "../index";
 import { base64ToBigint } from "bigint-conversion";
+import { AquaticPrime, sign } from "../index";
 
 // example keys
 const examplePublicKey =
@@ -10,10 +10,10 @@ const examplePrivateKey =
   "m+f5w08i13AWD9nj8MOU73k9g+fdFRfcfgoFbwZ4bDitwXgJdMo4EqHe+6+GFIOBRc4w8nnKF5S7JIIUz9xFzC760ahNC4tELXFiNIbsNt9gNqStjNMZdD57zw7P6o0JVbEwXkL+MPBC1nqTF/EP880u37HQA4lu93kXQhmTSKs=";
 // E9DBF6A4F6B443282117C6D5E9255F6735DC45DBCB9FA3CABD0F082689B4A25504A2340E2F2F541BF2CE7987491EC541E8B5496BB6AF235F18B6C31F37CA68B430431E41611E93DCFBE40EB7D3C726E74B9D68B9867706A5E0CBD44E0B8863AAC3D2FDBF3CD57B10C3E90039E966F789CC8CBCB1CEBBD2EB95FF5F05E48F37A3
 const examplePayload = {
-  "name": "fooinator",
-  "date": "2020-01-01",
-  "version": "1.0.0",
-  "description": "foo",
+  name: "fooinator",
+  date: "2020-01-01",
+  version: "1.0.0",
+  description: "foo",
 };
 const exampleExpect =
   "vU67LJsEd8yDuxL+9Y9xfJYCl4IFLoO4pijK8n7J+UY7cxIhv3y9G3UdZ4nl9Xi7hfk2cbtv53xxQBRclZKoEZRrQPo+jz9WJIzzFaBzvX9PobSvtdyShXqTUOloEextvDwGB9KjU+OUv5jqyPc/auiZY9fcsgvFgJWEZXBfT+8=";
