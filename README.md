@@ -19,6 +19,6 @@ const aqp = new AquaticPrime({
 const license = aqp.generateLicense({
   "Name": "Foo",
   "Date": "2022-02-01",
-  "AbritraryWhatever": "Dingus"
+  "AbritraryWhatever": "Dingus",
 });
 ```

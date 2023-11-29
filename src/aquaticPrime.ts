@@ -1,5 +1,5 @@
-import { base64ToBigint, bigintToBuf, hexToBigint } from "bigint-conversion";
 import { createHash } from "node:crypto";
+import { base64ToBigint, bigintToBuf, hexToBigint } from "bigint-conversion";
 const plist = require("plist");
 // Based on the original `aquatic_prime.coffee` from https://github.com/bdrister/AquaticPrime
 
@@ -10,13 +10,15 @@ export class AquaticPrime {
   private keys: KeyPair;
 
   // Create a new AquaticPrime instance with a public and private key
-  constructor(
-    { publicKey, privateKey, keyFormat }: {
-      publicKey: string;
-      privateKey: string;
-      keyFormat: "hex" | "base64";
-    },
-  ) {
+  constructor({
+    publicKey,
+    privateKey,
+    keyFormat,
+  }: {
+    publicKey: string;
+    privateKey: string;
+    keyFormat: "hex" | "base64";
+  }) {
     if (keyFormat === "hex") {
       this.keys = {
         publicKey: hexToBigint(publicKey),
@@ -42,23 +44,22 @@ export class AquaticPrime {
 }
 
 // Modular exponentiation
-const powmod = (x: bigint, a: bigint, m: bigint): bigint => {
-  let r = 1n;
-  while (a > 0n) {
-    if (a % 2n === 1n) {
-      r = (r * x) % m;
+const powmod = (base: bigint, exponent: bigint, modulus: bigint): bigint => {
+  let e = exponent;
+  let b = base;
+  let r = 1n; // result
+  while (e > 0n) {
+    if (e % 2n === 1n) {
+      r = (r * b) % modulus;
     }
-    a = a >> 1n;
-    x = (x * x) % m;
+    e = e >> 1n;
+    b = (b * b) % modulus;
   }
   return r;
 };
 
 // Sign a license with a raw private key and public key, returning signature
-export function sign(
-  licenseDetails: LicenseDetails,
-  keys: KeyPair,
-) {
+export function sign(licenseDetails: LicenseDetails, keys: KeyPair) {
   // Concatenate the values in sorted key order
   const sortedKeys = Object.keys(licenseDetails).sort();
   const concatenation = sortedKeys.map((key) => licenseDetails[key]).join("");
@@ -68,10 +69,6 @@ export function sign(
   hash.update(concatenation, "utf8");
 
   // Pad the hash with magic bytes then sign it
-  const paddedHash = "0001" + "ff".repeat(105) + "00" + hash.digest("hex");
-  return powmod(
-    BigInt("0x" + paddedHash),
-    keys.privateKey,
-    keys.publicKey,
-  );
+  const paddedHash = `0001${"ff".repeat(105)}00${hash.digest("hex")}`;
+  return powmod(BigInt(`0x${paddedHash}`), keys.privateKey, keys.publicKey);
 }
