@@ -41,7 +41,7 @@ export class AquaticPrime {
       ...licenseDetails,
       Signature: bigintToBuf(signHash(hashHex, this.keys)),
     });
-    return signedPlist;
+    return { signedPlist, hashHex };
   }
 }
 

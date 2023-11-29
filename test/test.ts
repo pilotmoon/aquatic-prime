@@ -53,5 +53,5 @@ test("sign", (t) => {
 });
 
 test("generateLicense", (t) => {
-  t.is(aqp.generateLicense(examplePayload), examplePlist);
+  t.deepEqual(aqp.generateLicense(examplePayload), { signedPlist: examplePlist, hashHex: exampleHash });
 });

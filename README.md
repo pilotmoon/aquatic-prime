@@ -16,7 +16,7 @@ const aqp = new AquaticPrime({
 });
 
 // generate license plist
-const license = aqp.generateLicense({
+const { signedPlist } = aqp.generateLicense({
   "Name": "Foo",
   "Date": "2022-02-01",
   "AbritraryWhatever": "Dingus",

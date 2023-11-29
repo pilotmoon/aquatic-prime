@@ -48,5 +48,5 @@ const exampleKeyPair = {
     t.is((0, index_1.signHash)((0, index_1.hashLicense)(examplePayload), exampleKeyPair), (0, bigint_conversion_1.base64ToBigint)(exampleExpect));
 });
 (0, ava_1.default)("generateLicense", (t) => {
-    t.is(aqp.generateLicense(examplePayload), examplePlist);
+    t.deepEqual(aqp.generateLicense(examplePayload), { signedPlist: examplePlist, hashHex: exampleHash });
 });

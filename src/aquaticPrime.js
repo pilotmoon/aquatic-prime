@@ -30,7 +30,7 @@ class AquaticPrime {
             ...licenseDetails,
             Signature: (0, bigint_conversion_1.bigintToBuf)(signHash(hashHex, this.keys)),
         });
-        return signedPlist;
+        return { signedPlist, hashHex };
     }
 }
 exports.AquaticPrime = AquaticPrime;
