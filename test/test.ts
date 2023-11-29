@@ -1,6 +1,6 @@
 import test from "ava";
 import { base64ToBigint } from "bigint-conversion";
-import { AquaticPrime, sign } from "../index";
+import { AquaticPrime, hashLicense, signHash } from "../index";
 
 // example keys
 const examplePublicKey =
@@ -33,6 +33,7 @@ const examplePlist = `<?xml version="1.0" encoding="UTF-8"?>
     <data>vU67LJsEd8yDuxL+9Y9xfJYCl4IFLoO4pijK8n7J+UY7cxIhv3y9G3UdZ4nl9Xi7hfk2cbtv53xxQBRclZKoEZRrQPo+jz9WJIzzFaBzvX9PobSvtdyShXqTUOloEextvDwGB9KjU+OUv5jqyPc/auiZY9fcsgvFgJWEZXBfT+8=</data>
   </dict>
 </plist>`;
+const exampleHash = "8906c29c7d1927f8d2fca3329ff6318d44fa8c4f";
 const aqp = new AquaticPrime({
   publicKey: examplePublicKey,
   privateKey: examplePrivateKey,
@@ -43,8 +44,12 @@ const exampleKeyPair = {
   privateKey: base64ToBigint(examplePrivateKey),
 };
 
+test("hash", (t) => {
+  t.is(hashLicense(examplePayload), exampleHash);
+});
+
 test("sign", (t) => {
-  t.is(sign(examplePayload, exampleKeyPair), base64ToBigint(exampleExpect));
+  t.is(signHash(hashLicense(examplePayload), exampleKeyPair), base64ToBigint(exampleExpect));
 });
 
 test("generateLicense", (t) => {

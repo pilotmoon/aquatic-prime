@@ -36,10 +36,12 @@ export class AquaticPrime {
 
   // Generate a license plist from a license details object
   generateLicense(licenseDetails: LicenseDetails) {
-    return plist.build({
+    const hashHex = hashLicense(licenseDetails);
+    const signedPlist =  plist.build({
       ...licenseDetails,
-      Signature: bigintToBuf(sign(licenseDetails, this.keys)),
+      Signature: bigintToBuf(signHash(hashHex, this.keys)),
     });
+    return signedPlist;
   }
 }
 
@@ -59,7 +61,7 @@ const powmod = (base: bigint, exponent: bigint, modulus: bigint): bigint => {
 };
 
 // Sign a license with a raw private key and public key, returning signature
-export function sign(licenseDetails: LicenseDetails, keys: KeyPair) {
+export function hashLicense(licenseDetails: LicenseDetails) {
   // Concatenate the values in sorted key order
   const sortedKeys = Object.keys(licenseDetails).sort();
   const concatenation = sortedKeys.map((key) => licenseDetails[key]).join("");
@@ -68,7 +70,11 @@ export function sign(licenseDetails: LicenseDetails, keys: KeyPair) {
   const hash = createHash("sha1");
   hash.update(concatenation, "utf8");
 
+  return hash.digest("hex");
+}
+  
+export function signHash(hashHex: string, keys: KeyPair) {
   // Pad the hash with magic bytes then sign it
-  const paddedHash = `0001${"ff".repeat(105)}00${hash.digest("hex")}`;
+  const paddedHash = `0001${"ff".repeat(105)}00${hashHex}`;
   return powmod(BigInt(`0x${paddedHash}`), keys.privateKey, keys.publicKey);
 }
